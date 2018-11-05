@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+    <Properties>
+        <Property name="log-path">applogs</Property>
+    </Properties>
+    <Appenders>
+
+        <!--    Specify the file name and format for the Spring code appender.     -->
+        <File name="SpringBoot-File-Appender" fileName="${log-path}/springboot_log.log">
+            <ThresholdFilter level="INFO" onMatch="DENY"   onMismatch="NEUTRAL"/>
+            <ThresholdFilter level="DEBUG" onMatch="DENY"   onMismatch="NEUTRAL"/>
+            <PatternLayout>
+                <pattern>
+                    %d{HH:mm:ss.SSS} [%t] [%-5level] %logger{36} - %msg%n"
+                </pattern>
+            </PatternLayout>
+        </File>
+
+        <!--    Specify the file name and format for the application code appender.     -->
+        <File name="App-File-Appender" fileName="${log-path}/app_log.log">
+            <PatternLayout>
+                <pattern>
+                    %d{HH:mm:ss.SSS} [%t] [%-5level] %logger{36} - %msg%n"
+                </pattern>
+            </PatternLayout>
+        </File>
+
+        <!-- Specify the format for messages logged to the console only     -->
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    %d{HH:mm:ss.SSS} [%t] [%-5level] %logger{36} - %msg%n"
+                </pattern>
+            </PatternLayout>
+        </Console>
+
+
+        <!-- Rolling File Appender -->
+        <RollingFile name="LogstashJSONFile"
+                     fileName="${log-path}/server_logstash_json.log"
+                     filePattern="${log-path}/server_logstash_json.%d{MM-dd-yyyy}.log.gz"
+                     ignoreExceptions="false">
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <!--    This format is defined inside the library -         -->
+
+            <LogstashLayout dateTimeFormatPattern="yyyy-MM-dd'T'HH:mm:ss.SSSZZZ"
+                            templateUri="classpath:LogstashJsonEventLayoutV1.json"
+                            prettyPrintEnabled="false"
+                            stackTraceEnabled="true"/>
+
+            <!--<DefaultRolloverStrategy max="10"/>-->
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <!--    Logger for all Spring internals     -->
+        <Logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="SpringBoot-File-Appender"/>
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+
+        <!--    Logger for metrics                  -->
+        <!--    Need to pump this to LogStash later -->
+        <!--    TODO: Andre                         -->
+        <Logger name="io.dropwizard.metrics" level="ERROR" additivity="false">
+            <AppenderRef ref="SpringBoot-File-Appender"/>
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+
+
+        <Logger name="com.ktk.mobilemart.core.api.invoker" level="ERROR" additivity="false">
+            <AppenderRef ref="App-File-Appender"/>
+        </Logger>
+
+        <!--    Logger for all Kinektek code      -->
+        <Logger name="com.ktk.mobilemart" level="debug" additivity="false">
+            <AppenderRef ref="LogstashJSONFile"/>
+            <AppenderRef ref="App-File-Appender"/>
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+        <!--    Default for console     -->
+        <Root>
+            <AppenderRef ref="Console-Appender"/>
+        </Root>
+    </Loggers>
+</Configuration>

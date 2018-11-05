@@ -1,0 +1,5 @@
+${AnsiColor.CYAN}
+${AnsiColor.CYAN}|\/| _
+${AnsiColor.CYAN}|  |(_)
+${AnsiColor.CYAN}
+${AnsiColor.CYAN} Mo Core Module : Running On Spring Boot ${spring-boot.version}

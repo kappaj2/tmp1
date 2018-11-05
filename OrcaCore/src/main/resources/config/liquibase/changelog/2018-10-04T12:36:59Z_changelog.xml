@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="kappaj (generated)" id="1538656626966-1">
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kappaj (generated)" id="1538656626966-2">
+        <createTable tableName="orca_api_statistics">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="orca_api_statisticsPK"/>
+            </column>
+            <column name="api_called" type="VARCHAR(255)"/>
+            <column name="api_method_called" type="VARCHAR(255)"/>
+            <column name="api_request_time" type="datetime"/>
+            <column name="call_duration" type="BIGINT"/>
+            <column name="request_payload" type="LONGTEXT"/>
+            <column name="response_code" type="INT"/>
+            <column name="response_message" type="VARCHAR(255)"/>
+            <column name="response_payload" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kappaj (generated)" id="1538656626966-3">
+        <createTable tableName="persistent_audit_event">
+            <column autoIncrement="true" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="TINYBLOB"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kappaj (generated)" id="1538656626966-4">
+        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+    </changeSet>
+    <changeSet author="kappaj (generated)" id="1538656626966-5">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FKgynuc5n7uaggo146u57w5gnbl" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="persistent_audit_event"/>
+    </changeSet>
+
+    <changeSet author="kappaj (generated)" id="1538656626966-6" dbms="mysql">
+        <sql>
+            ALTER TABLE orca_api_statistics CONVERT TO CHARACTER SET utf8mb4
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
